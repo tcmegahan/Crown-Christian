@@ -88,4 +88,81 @@ class Command(BaseCommand):
                         notes=row["notes"] or None,
                     )
 
+            # --- EXTENDED MOCK DATA FOR ALL MODULES ---
+            from faker import Faker
+            from admissions.models import Application
+            from staff.models import StaffMember
+            from curriculum.models import Course, Enrollment
+            from events.models import Event
+            from communications.models import CommunicationMessage
+            from devotions.models import Devotion
+            fake = Faker()
+
+            self.stdout.write("Seeding admissions applications...")
+            grades = [f"PK{i}" for i in range(3)] + [str(i) for i in range(1, 13)]
+            for grade in grades:
+                for _ in range(3):
+                    Application.objects.create(
+                        first_name=fake.first_name(),
+                        last_name=fake.last_name(),
+                        grade_applied=grade,
+                        status=random.choice(["Received", "Review", "Accepted", "Waitlist", "Declined"]),
+                    )
+
+            self.stdout.write("Seeding staff members...")
+            roles = ["Administrator", "Principal"] + [f"Teacher {g}" for g in grades]
+            for role in roles:
+                StaffMember.objects.create(
+                    first_name=fake.first_name(),
+                    last_name=fake.last_name(),
+                    role=role,
+                )
+
+            self.stdout.write("Seeding curriculum courses and enrollments...")
+            course_objs = []
+            for grade in grades:
+                for i in range(2):
+                    course = Course.objects.create(
+                        code=f"{grade}-C{i+1}",
+                        title=f"{grade} Course {i+1}",
+                        grade_band=grade,
+                        description=fake.sentence(),
+                    )
+                    course_objs.append(course)
+            # Enroll students in courses
+            for student in students:
+                for course in random.sample(course_objs, k=min(2, len(course_objs))):
+                    Enrollment.objects.get_or_create(
+                        student=student,
+                        course=course,
+                        year=str(datetime.datetime.now().year),
+                    )
+
+            self.stdout.write("Seeding events...")
+            for _ in range(10):
+                Event.objects.create(
+                    title=fake.catch_phrase(),
+                    date=fake.date_between(start_date="-1y", end_date="today"),
+                    location=fake.company(),
+                    description=fake.text(max_nb_chars=100),
+                )
+
+            self.stdout.write("Seeding communications...")
+            for _ in range(15):
+                CommunicationMessage.objects.create(
+                    channel=random.choice(["Email", "SMS", "Teams"]),
+                    subject=fake.sentence(nb_words=6),
+                    body=fake.text(max_nb_chars=200),
+                    sent_at=fake.date_time_this_year(),
+                )
+
+            self.stdout.write("Seeding devotions...")
+            for _ in range(10):
+                Devotion.objects.create(
+                    title=fake.sentence(nb_words=4),
+                    scripture=fake.sentence(nb_words=6),
+                    content=fake.text(max_nb_chars=300),
+                    date=fake.date_between(start_date="-1y", end_date="today"),
+                )
+
             self.stdout.write(self.style.SUCCESS("Demo data seeded."))
