@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="cards">
+  <div class="card">
+    <h3>Total Students</h3>
+    <div class="muted">{{ totals.students }}</div>
+  </div>
+  <div class="card">
+    <h3>Total Tuition (YTD)</h3>
+    <div class="muted">${{ totals.tuition|floatformat:2 }}</div>
+  </div>
+  <div class="card">
+    <h3>Aid Awarded (YTD)</h3>
+    <div class="muted">${{ totals.aid|floatformat:2 }}</div>
+  </div>
+  <div class="card">
+    <h3>Donations (YTD)</h3>
+    <div class="muted">${{ totals.donations|floatformat:2 }}</div>
+  </div>
+</div>
+
+<div class="card">
+  <h3>Recent Discipline Incidents</h3>
+  <table>
+    <tr><th>Date</th><th>Student</th><th>Type</th><th>Notes</th></tr>
+    {% for inc in recent_incidents %}
+      <tr>
+        <td>{{ inc.date }}</td>
+        <td>{{ inc.student.full_name }}</td>
+        <td>{{ inc.incident_type }}</td>
+        <td class="muted">{{ inc.notes|default:"—" }}</td>
+      </tr>
+    {% empty %}
+      <tr><td colspan="4" class="muted">No incidents.</td></tr>
+    {% endfor %}
+  </table>
+</div>
+{% endblock %}

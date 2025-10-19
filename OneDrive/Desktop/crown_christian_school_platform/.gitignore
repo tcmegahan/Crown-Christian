@@ -1,0 +1,88 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+.mypy_cache/
+.idea/
+.DS_Store
+
+# Python/Django
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+*.sqlite3
+*.db
+*.log
+*.pot
+*.pyc
+*.pyo
+*.pyd
+.env
+.venv
+venv/
+ENV/
+env/
+
+# Django static and media
+static/
+media/
+
+# VS Code
+.vscode/
+
+# Jupyter Notebooks
+.ipynb_checkpoints/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Test and coverage
+htmlcov/
+.coverage
+.tox/
+.nox/
+.pytest_cache/
+
+# Docker
+*.pid
+docker-compose.override.yml
+
+# Data files
+data/
+
+# Misc
+*.swp
+*.swo
+*.bak
+*.tmp
+
+# Node
+node_modules/
+
+# Other
+*.orig
+
+# Ignore migrations if desired (uncomment if you want to ignore)
+# */migrations/*.py
+# */migrations/*.pyc

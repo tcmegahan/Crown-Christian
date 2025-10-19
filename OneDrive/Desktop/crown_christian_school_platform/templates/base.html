@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Crown Admin</title>
+  <style>
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; margin: 2rem; background:#f7f7f9; }
+    header { display:flex; justify-content:space-between; align-items:center; }
+    .cards { display:grid; grid-template-columns: repeat(auto-fit,minmax(220px,1fr)); gap:1rem; margin-top:1rem; }
+    .card { background:#fff; border-radius:16px; padding:1rem 1.25rem; box-shadow:0 8px 24px rgba(0,0,0,.06); }
+    h1 { margin:0; }
+    table { width: 100%; border-collapse: collapse; margin-top:1rem;}
+    td, th { padding:.5rem; border-bottom:1px solid #eee; text-align:left; }
+    .muted { color:#666; font-size:.9rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Crown Admin Dashboard</h1>
+    <a href="/admin/">Django Admin →</a>
+  </header>
+  {% block content %}{% endblock %}
+</body>
+</html>
