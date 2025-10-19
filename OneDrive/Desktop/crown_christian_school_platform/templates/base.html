@@ -5,21 +5,40 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Crown Admin</title>
   <style>
-    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; margin: 2rem; background:#f7f7f9; }
-    header { display:flex; justify-content:space-between; align-items:center; }
+    :root {
+      --primary: #1746a0;
+      --accent: #ffd700;
+      --bg: #f7f7f9;
+      --card-bg: #fff;
+      --muted: #666;
+    }
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; margin: 2rem; background: var(--bg); }
+    header { display:flex; justify-content:space-between; align-items:center; border-bottom: 3px solid var(--primary); padding-bottom: 1rem; }
+    .logo {
+      display: flex; align-items: center; gap: 1rem;
+    }
+    .logo-img {
+      width: 48px; height: 48px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; font-size: 2rem; color: var(--primary); font-weight: bold;
+    }
     .cards { display:grid; grid-template-columns: repeat(auto-fit,minmax(220px,1fr)); gap:1rem; margin-top:1rem; }
-    .card { background:#fff; border-radius:16px; padding:1rem 1.25rem; box-shadow:0 8px 24px rgba(0,0,0,.06); }
-    h1 { margin:0; }
+    .card { background:var(--card-bg); border-radius:16px; padding:1rem 1.25rem; box-shadow:0 8px 24px rgba(23,70,160,.08); border-left: 6px solid var(--primary); }
+    h1 { margin:0; color: var(--primary); }
+    h3 { color: var(--primary); }
     table { width: 100%; border-collapse: collapse; margin-top:1rem;}
     td, th { padding:.5rem; border-bottom:1px solid #eee; text-align:left; }
-    .muted { color:#666; font-size:.9rem; }
+    .muted { color:var(--muted); font-size:.9rem; }
+    a { color: var(--primary); text-decoration: none; font-weight: bold; }
+    a:hover { color: var(--accent); }
   </style>
 </head>
 <body>
   <header>
     <h1>Crown Admin Dashboard</h1>
     <a href="/admin/">Django Admin →</a>
+  <header>
+    <div class="logo">
+      <div class="logo-img">CCS</div>
+      <h1>Crown Admin Dashboard</h1>
+    </div>
+    <a href="/admin/">Django Admin </a>
   </header>
-  {% block content %}{% endblock %}
-</body>
-</html>

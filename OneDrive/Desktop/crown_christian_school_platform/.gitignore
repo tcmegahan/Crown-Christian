@@ -1,4 +1,5 @@
-__pycache__/
+git config --global user.name "Your Name"
+git config --global user.email "your@email.com"__pycache__/
 *.pyc
 *.pyo
 *.pyd
