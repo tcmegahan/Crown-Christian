@@ -16,6 +16,8 @@ ALLOWED_HOSTS = env("ALLOWED_HOSTS")
 TIME_ZONE = env("TIME_ZONE")
 
 INSTALLED_APPS = [
+    'staff',
+    'curriculum',
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",

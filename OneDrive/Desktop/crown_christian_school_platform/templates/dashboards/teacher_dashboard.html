@@ -1,9 +1,117 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>Teacher Dashboard</h2>
-<div class="cards">
-  <div class="card"><h3>My Classes</h3><div class="muted">View and manage your classes and students.</div></div>
-  <div class="card"><h3>Lesson Plans</h3><div class="muted">Access and create lesson plans.</div></div>
-  <div class="card"><h3>Quick Links</h3><ul><li><a href="/curriculum/">Curriculum</a></li><li><a href="/students/">Students</a></li><li><a href="/devotions/">Devotions</a></li></ul></div>
+<div class="row mb-4" role="main" aria-labelledby="dashboard-title">
+  <div class="col-12 mb-3">
+    <h1 id="dashboard-title" class="fw-bold display-5" aria-label="Teacher Dashboard"><i class="bi bi-person-workspace me-2"></i>Teacher Dashboard</h1>
+    <div class="text-muted">Welcome, <span class="visually-hidden">Teacher:</span> {{ teacher }}</div>
+    <span class="visually-hidden" id="dashboard-sections">Dashboard Sections: My Classes, Lesson Plans, Class Analytics, Quick Links</span>
+  </div>
+  <div class="col-md-6 mb-3">
+    <div class="card shadow-sm h-100">
+      <div class="card-body">
+        <h2 class="card-title h5" aria-label="My Classes"><i class="bi bi-people me-2"></i>My Classes</h2>
+        <span class="visually-hidden">Section: My Classes</span>
+        {% if my_classes %}
+          <ul class="list-group" aria-label="Classes List">
+          {% for c in my_classes %}
+            <li class="list-group-item">
+              <span class="visually-hidden">Class:</span> <strong>{{ c.title }}</strong> ({{ c.grade_level }})
+              <ul class="mb-1" aria-label="Student List">
+                <li class="list-group-item p-0 border-0"><span class="text-muted small">Students:</span></li>
+                {% if class_students.c %}
+                  {% for s in class_students.c %}
+                    <li class="list-group-item p-0 border-0"><span class="visually-hidden">Student:</span> {{ s }}</li>
+                  {% endfor %}
+                {% else %}
+                  <li class="list-group-item p-0 border-0 text-muted">No students enrolled.</li>
+                {% endif %}
+              </ul>
+            </li>
+          {% endfor %}
+          </ul>
+        {% else %}
+          <div class="text-muted">No classes assigned.</div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6 mb-3">
+    <div class="card shadow-sm h-100">
+      <div class="card-body">
+        <h2 class="card-title h5" aria-label="Lesson Plans"><i class="bi bi-journal-bookmark me-2"></i>Lesson Plans</h2>
+        <span class="visually-hidden">Section: Lesson Plans</span>
+        {% if lesson_plans %}
+          <ul class="list-group" aria-label="Lesson Plans List">
+          {% for lp in lesson_plans %}
+            <li class="list-group-item">
+              <span class="visually-hidden">Lesson Plan:</span> <strong>{{ lp.course.title }}</strong> - Week {{ lp.week }}<br>
+              <span class="text-muted small">{{ lp.topic }}</span>
+            </li>
+          {% endfor %}
+          </ul>
+        {% else %}
+          <div class="text-muted">No lesson plans available.</div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row mb-4">
+  <div class="col-12">
+    <div class="card shadow-sm">
+      <div class="card-header bg-primary text-white">
+  <h2 class="mb-0 h5" aria-label="Class Analytics">Class Analytics</h2>
+  <span class="visually-hidden">Section: Class Analytics</span>
+      </div>
+      <div class="card-body">
+        <canvas id="classAnalyticsChart" height="80"></canvas>
+        <script id="analytics-labels" type="application/json">{{ analytics_data.labels|json_script:"analytics-labels" }}</script>
+        <script id="analytics-counts" type="application/json">{{ analytics_data.counts|json_script:"analytics-counts" }}</script>
+        <script>
+          const analyticsLabels = JSON.parse(document.getElementById('analytics-labels').textContent);
+          const analyticsCounts = JSON.parse(document.getElementById('analytics-counts').textContent);
+          const ctxAnalytics = document.getElementById('classAnalyticsChart').getContext('2d');
+          new Chart(ctxAnalytics, {
+            type: 'bar',
+            data: {
+              labels: analyticsLabels,
+              datasets: [{
+                label: 'Students',
+                data: analyticsCounts,
+                backgroundColor: 'rgba(75, 192, 192, 0.7)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+              }]
+            },
+            options: {
+              responsive: true,
+              plugins: {
+                legend: { display: false },
+                title: { display: false }
+              },
+              scales: {
+                y: { beginAtZero: true, title: { display: true, text: 'Students' } },
+                x: { title: { display: true, text: 'Class' } }
+              }
+            }
+          });
+        </script>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row mb-4">
+  <div class="col-12">
+    <div class="card shadow-sm">
+      <div class="card-header bg-info text-white">
+        <h5 class="mb-0">Quick Links</h5>
+      </div>
+      <div class="card-body d-flex flex-wrap gap-3" role="navigation" aria-label="Quick Links">
+        <a href="/curriculum/" class="btn btn-primary" aria-label="Curriculum">Curriculum</a>
+        <a href="/students/" class="btn btn-success" aria-label="Students">Students</a>
+        <a href="/devotions/" class="btn btn-secondary" aria-label="Devotions">Devotions</a>
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}

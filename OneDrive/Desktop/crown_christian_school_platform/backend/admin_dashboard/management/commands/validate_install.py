@@ -36,8 +36,8 @@ class Command(BaseCommand):
             errors.append(f"Apps missing migrations: {unmigrated}")
         # Check demo data
         try:
-            from backend.crm.models import Person
-            student_count = Person.objects.filter(role="student").count()
+            from students.models import Student
+            student_count = Student.objects.count()
             if student_count < 1:
                 errors.append("No demo students found. Run seed_demo_data.")
         except Exception as e:

@@ -1,9 +1,47 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>Staff Dashboard</h2>
-<div class="cards">
-  <div class="card"><h3>Staff Directory</h3><div class="muted">View and manage staff members.</div></div>
-  <div class="card"><h3>Upcoming Events</h3><div class="muted">See all school events and activities.</div></div>
-  <div class="card"><h3>Quick Links</h3><ul><li><a href="/staff/">Staff</a></li><li><a href="/events/">Events</a></li><li><a href="/communications/">Communications</a></li></ul></div>
+<div class="row mb-4">
+  <div class="col-12 mb-3">
+    <h1 id="dashboard-title" class="fw-bold display-5" aria-label="Staff Dashboard"><i class="bi bi-person-lines-fill me-2"></i>Staff Dashboard</h1>
+    <span class="visually-hidden" id="dashboard-sections">Dashboard Sections: Staff Directory, Upcoming Events, Quick Links, Staff Analytics</span>
+  </div>
+  <div class="col-md-4 mb-3">
+    <div class="card shadow-sm h-100">
+      <div class="card-body">
+        <h5 class="card-title"><i class="bi bi-people-fill me-2"></i>Staff Directory</h5>
+        <p class="card-text text-muted">View and manage staff members.</p>
+        <div class="text-muted">Staff directory and management features coming soon.</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4 mb-3">
+    <div class="card shadow-sm h-100">
+      <div class="card-body">
+        <h5 class="card-title"><i class="bi bi-calendar-event me-2"></i>Upcoming Events</h5>
+        <p class="card-text text-muted">See all school events and activities.</p>
+        <div class="text-muted">Upcoming events and activities will be shown here.</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4 mb-3">
+    <div class="card shadow-sm h-100">
+      <div class="card-body">
+        <h2 class="card-title h5" aria-label="Quick Links"><i class="bi bi-lightning-charge me-2"></i>Quick Links</h2>
+        <span class="visually-hidden">Section: Quick Links</span>
+        <div class="d-flex flex-wrap gap-2" role="navigation" aria-label="Quick Links">
+          <a href="/staff/" class="btn btn-primary" aria-label="Staff">Staff</a>
+          <a href="/events/" class="btn btn-success" aria-label="Events">Events</a>
+          <a href="/communications/" class="btn btn-secondary" aria-label="Communications">Communications</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="card mb-4">
+  <div class="card-body">
+  <h2 class="card-title h5" aria-label="Staff Analytics"><i class="bi bi-graph-up-arrow me-2"></i>Staff Analytics</h2>
+  <span class="visually-hidden">Section: Staff Analytics</span>
+    <div class="text-muted">Analytics and insights will be available soon.</div>
+  </div>
 </div>
 {% endblock %}

@@ -1,9 +1,90 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>Student Dashboard</h2>
-<div class="cards">
-  <div class="card"><h3>My Schedule</h3><div class="muted">See your classes and events.</div></div>
-  <div class="card"><h3>Assignments</h3><div class="muted">View and submit assignments.</div></div>
-  <div class="card"><h3>Quick Links</h3><ul><li><a href="/curriculum/">Curriculum</a></li><li><a href="/events/">Events</a></li><li><a href="/devotions/">Devotions</a></li></ul></div>
+<div class="row mb-4" role="main" aria-labelledby="dashboard-title">
+  <div class="col-12 mb-3">
+    <h1 id="dashboard-title" class="fw-bold display-5" aria-label="Student Dashboard"><i class="bi bi-person-circle me-2"></i>Student Dashboard</h1>
+    <div class="text-muted">Welcome, <span class="visually-hidden">Student:</span> {{ student }}</div>
+    <span class="visually-hidden" id="dashboard-sections">Dashboard Sections: My Schedule, Assignments, Quick Links, Upcoming Events, Latest Devotion</span>
+  </div>
+  <div class="col-md-4 mb-3">
+    <div class="card shadow-sm h-100">
+      <div class="card-body">
+        <h2 class="card-title h5" aria-label="My Schedule"><i class="bi bi-calendar-week me-2"></i>My Schedule</h2>
+        <span class="visually-hidden">Section: My Schedule</span>
+        {% if my_courses %}
+          <ul class="list-group" aria-label="Schedule List">
+            {% for course in my_courses %}
+              <li class="list-group-item"><span class="visually-hidden">Course:</span> <strong>{{ course.title }}</strong> (Grade {{ course.grade_level }})</li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <ul class="list-group" aria-label="Schedule List">
+            <li class="list-group-item text-muted">No courses enrolled.</li>
+          </ul>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4 mb-3">
+    <div class="card shadow-sm h-100">
+      <div class="card-body">
+        <h5 class="card-title"><i class="bi bi-journal-text me-2"></i>Assignments</h5>
+        <div class="text-muted">Assignments feature coming soon.</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4 mb-3">
+    <div class="card shadow-sm h-100">
+      <div class="card-body">
+        <h2 class="card-title h5" aria-label="Quick Links"><i class="bi bi-lightning-charge me-2"></i>Quick Links</h2>
+        <span class="visually-hidden">Section: Quick Links</span>
+        <div class="d-flex flex-wrap gap-2" role="navigation" aria-label="Quick Links">
+          <a href="/curriculum/" class="btn btn-primary mb-2" aria-label="Curriculum">Curriculum</a>
+          <a href="/events/" class="btn btn-success mb-2" aria-label="Events">Events</a>
+          <a href="/devotions/" class="btn btn-secondary mb-2" aria-label="Devotions">Devotions</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row mb-4">
+  <div class="col-md-6 mb-3">
+    <div class="card shadow-sm h-100">
+      <div class="card-body">
+        <h2 class="card-title h5" aria-label="Upcoming Events"><i class="bi bi-calendar-event me-2"></i>Upcoming Events</h2>
+        <span class="visually-hidden">Section: Upcoming Events</span>
+        {% if upcoming_events %}
+          <ul class="list-group" aria-label="Upcoming Events List">
+            {% for event in upcoming_events %}
+              <li class="list-group-item"><span class="visually-hidden">Event:</span> <strong>{{ event.title }}</strong><br><span class="text-muted small">{{ event.date|date:'M d, Y' }}</span></li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <ul class="list-group" aria-label="Upcoming Events List">
+            <li class="list-group-item text-muted">No upcoming events.</li>
+          </ul>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6 mb-3">
+    <div class="card shadow-sm h-100">
+      <div class="card-body">
+        <h2 class="card-title h5" aria-label="Latest Devotion"><i class="bi bi-book me-2"></i>Latest Devotion</h2>
+        <span class="visually-hidden">Section: Latest Devotion</span>
+        {% if latest_devotion %}
+          <ul class="list-group" aria-label="Latest Devotion">
+            <li class="list-group-item"><strong>{{ latest_devotion.title }}</strong></li>
+            <li class="list-group-item text-muted small">{{ latest_devotion.created|date:'M d, Y' }}</li>
+            <li class="list-group-item">{{ latest_devotion.body|truncatewords:20 }}</li>
+          </ul>
+        {% else %}
+          <ul class="list-group" aria-label="Latest Devotion">
+            <li class="list-group-item text-muted">No devotions available.</li>
+          </ul>
+        {% endif %}
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}

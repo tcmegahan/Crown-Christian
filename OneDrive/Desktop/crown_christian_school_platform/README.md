@@ -37,27 +37,27 @@ This platform includes the following Django apps:
 ## Usage
 
 1. Add all apps to `INSTALLED_APPS` in `backend/core/settings.py`.
-2. Set required settings (see installer instructions).
-3. Install dependencies:
+1. Set required settings (see installer instructions).
+1. Install dependencies:
 
 ```sh
 pip install django msal reportlab pillow requests
 ```
 
-4. Run migrations:
+1. Run migrations:
 
 ```sh
 python manage.py createsuperuser
 ```
 
-6. Seed demo data:
+1. Seed demo data:
 
 ```sh
 python manage.py generate_chapel_poster
 python manage.py generate_devotion_posters
 ```
 
-8. Social automations:
+1. Social automations:
 
 ```sh
 python manage.py run_social_scheduler

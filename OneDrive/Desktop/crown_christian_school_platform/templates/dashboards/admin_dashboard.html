@@ -1,9 +1,227 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 {% block content %}
-<h2>Admin Dashboard</h2>
-<div class="cards">
-  <div class="card"><h3>System Overview</h3><div class="muted">All modules, users, and data at a glance.</div></div>
-  <div class="card"><h3>Recent Activity</h3><div class="muted">System logs, user sign-ins, and changes.</div></div>
-  <div class="card"><h3>Quick Links</h3><ul><li><a href="/admin/">Django Admin</a></li><li><a href="/students/">Students</a></li><li><a href="/staff/">Staff</a></li><li><a href="/events/">Events</a></li></ul></div>
-</div>
+<div class="container mt-4">
+    <h1 id="dashboard-title" class="fw-bold display-5" aria-label="Admin Dashboard">Admin Dashboard</h1>
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card text-center shadow-sm mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Students</h5>
+                    <p class="display-6 fw-bold">{{ totals.students }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center shadow-sm mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Tuition Paid</h5>
+                    <p class="display-6 fw-bold">${{ totals.tuition|floatformat:2 }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center shadow-sm mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Aid Awarded</h5>
+                    <p class="display-6 fw-bold">${{ totals.aid|floatformat:2 }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center shadow-sm mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Donations</h5>
+                    <p class="display-6 fw-bold">${{ totals.donations|floatformat:2 }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+        <!-- Enrollment by Grade Chart -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-primary text-white">
+                            <h2 class="mb-0 h5" aria-label="Enrollment by Grade">Enrollment by Grade</h2>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="enrollmentChart" height="80"></canvas>
+                            <script id="enrollment-labels" type="application/json">{{ enrollment_data.labels|json_script:"enrollment-labels" }}</script>
+                            <script id="enrollment-counts" type="application/json">{{ enrollment_data.counts|json_script:"enrollment-counts" }}</script>
+                            <script>
+                                const enrollmentLabels = JSON.parse(document.getElementById('enrollment-labels').textContent);
+                                const enrollmentCounts = JSON.parse(document.getElementById('enrollment-counts').textContent);
+                                const ctx = document.getElementById('enrollmentChart').getContext('2d');
+                                new Chart(ctx, {
+                                    type: 'bar',
+                                    data: {
+                                        labels: enrollmentLabels,
+                                        datasets: [{
+                                            label: 'Students',
+                                            data: enrollmentCounts,
+                                            backgroundColor: 'rgba(54, 162, 235, 0.7)',
+                                            borderColor: 'rgba(54, 162, 235, 1)',
+                                            borderWidth: 1
+                                        }]
+                                    },
+                                    options: {
+                                        responsive: true,
+                                        plugins: {
+                                            legend: { display: false },
+                                            title: { display: false }
+                                        },
+                                        scales: {
+                                            y: { beginAtZero: true, title: { display: true, text: 'Students' } },
+                                            x: { title: { display: true, text: 'Grade' } }
+                                        }
+                                    }
+                                });
+                            </script>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h2 class="mb-0 h5" aria-label="Recent Discipline Incidents">Recent Discipline Incidents</h2>
+            </div>
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h2 class="mb-0 h5" aria-label="Recent Discipline Incidents">Recent Discipline Incidents</h2>
+            </div>
+            <div class="card-body p-0">
+                <table class="table mb-0" aria-label="Recent Discipline Incidents">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Student</th>
+                            <th>Incident</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for incident in recent_incidents %}
+                        <tr>
+                            <td>{{ incident.date|date:'Y-m-d' }}</td>
+                            <td>{{ incident.student }}</td>
+                            <td>{{ incident.description|truncatewords:10 }}</td>
+                        </tr>
+                    {% empty %}
+                        <tr><td colspan="3" class="text-center text-muted">No recent incidents.</td></tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+                                            <div class="row mb-4">
+                                                <div class="col-12">
+                                                    <div class="card shadow-sm">
+                                                        <div class="card-header bg-success text-white">
+                                                            <h2 class="mb-0 h5" aria-label="Finance Overview">Finance Overview</h2>
+                                                        </div>
+                                                        <div class="card-body">
+                                                            <canvas id="financeChart" height="80"></canvas>
+                                                            <script id="finance-labels" type="application/json">{{ finance_data.labels|json_script:"finance-labels" }}</script>
+                                                            <script id="finance-amounts" type="application/json">{{ finance_data.amounts|json_script:"finance-amounts" }}</script>
+                                                            <script>
+                                                                const financeLabels = JSON.parse(document.getElementById('finance-labels').textContent);
+                                                                const financeAmounts = JSON.parse(document.getElementById('finance-amounts').textContent);
+                                                                const ctxFinance = document.getElementById('financeChart').getContext('2d');
+                                                                new Chart(ctxFinance, {
+                                                                    type: 'doughnut',
+                                                                    data: {
+                                                                        labels: financeLabels,
+                                                                        datasets: [{
+                                                                            label: 'Amount',
+                                                                            data: financeAmounts,
+                                                                            backgroundColor: [
+                                                                                'rgba(54, 162, 235, 0.7)',
+                                                                                'rgba(75, 192, 192, 0.7)',
+                                                                                'rgba(255, 206, 86, 0.7)'
+                                                                            ],
+                                                                            borderColor: [
+                                                                                'rgba(54, 162, 235, 1)',
+                                                                                'rgba(75, 192, 192, 1)',
+                                                                                'rgba(255, 206, 86, 1)'
+                                                                            ],
+                                                                            borderWidth: 1
+                                                                        }]
+                                                                    },
+                                                                    options: {
+                                                                        responsive: true,
+                                                                        plugins: {
+                                                                            legend: { position: 'top' },
+                                                                            title: { display: false }
+                                                                        }
+                                                                    }
+                                                                });
+                                                            </script>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Discipline Trend Chart -->
+                                            <div class="row mb-4">
+                                                <div class="col-12">
+                                                    <div class="card shadow-sm">
+                                                        <div class="card-header bg-danger text-white">
+                                                            <h2 class="mb-0 h5" aria-label="Discipline Incidents (Last 12 Months)">Discipline Incidents (Last 12 Months)</h2>
+                                                        </div>
+                                                        <div class="card-body">
+                                                            <canvas id="disciplineChart" height="80"></canvas>
+                                                            <script id="discipline-labels" type="application/json">{{ discipline_trend.labels|json_script:"discipline-labels" }}</script>
+                                                            <script id="discipline-counts" type="application/json">{{ discipline_trend.counts|json_script:"discipline-counts" }}</script>
+                                                            <script>
+                                                                const disciplineLabels = JSON.parse(document.getElementById('discipline-labels').textContent);
+                                                                const disciplineCounts = JSON.parse(document.getElementById('discipline-counts').textContent);
+                                                                const ctxDiscipline = document.getElementById('disciplineChart').getContext('2d');
+                                                                new Chart(ctxDiscipline, {
+                                                                    type: 'line',
+                                                                    data: {
+                                                                        labels: disciplineLabels,
+                                                                        datasets: [{
+                                                                            label: 'Incidents',
+                                                                            data: disciplineCounts,
+                                                                            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                                                                            borderColor: 'rgba(255, 99, 132, 1)',
+                                                                            borderWidth: 2,
+                                                                            fill: true,
+                                                                            tension: 0.3
+                                                                        }]
+                                                                    },
+                                                                    options: {
+                                                                        responsive: true,
+                                                                        plugins: {
+                                                                            legend: { display: false },
+                                                                            title: { display: false }
+                                                                        },
+                                                                        scales: {
+                                                                            y: { beginAtZero: true, title: { display: true, text: 'Incidents' } },
+                                                                            x: { title: { display: true, text: 'Month' } }
+                                                                        }
+                                                                    }
+                                                                });
+                                                            </script>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                            <!-- Quick Actions -->
+                                            <div class="row mb-4">
+                                                <div class="col-12">
+                                                    <div class="card shadow-sm">
+                                                        <div class="card-header bg-info text-white">
+                                                            <h2 class="mb-0 h5" aria-label="Quick Actions">Quick Actions</h2>
+                                                        </div>
+                                                        <div class="card-body d-flex flex-wrap gap-3" role="navigation" aria-label="Quick Actions">
+                                                            <a href="/students/add/" class="btn btn-primary" aria-label="Add Student">Add Student</a>
+                                                            <a href="/admin/backend/finance/tuitionpayment/add/" class="btn btn-success" aria-label="Add Payment">Add Payment</a>
+                                                            <a href="/admin/backend/financial_aid/aidapplication/add/" class="btn btn-warning" aria-label="Add Aid Application">Add Aid Application</a>
+                                                            <a href="/admin/backend/donations/donation/add/" class="btn btn-secondary" aria-label="Add Donation">Add Donation</a>
+                                                            <a href="/admin/backend/discipline/disciplineincident/add/" class="btn btn-danger" aria-label="Add Discipline Incident">Add Discipline Incident</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
 {% endblock %}

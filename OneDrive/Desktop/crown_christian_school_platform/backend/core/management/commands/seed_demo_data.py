@@ -30,21 +30,10 @@ class Command(BaseCommand):
         StudentsStudent.objects.all().delete()
         project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..'))
         base_path = os.path.join(project_root, 'data', 'demo')
-        # Build student index to PK mapping
+        # Build student index to PK mapping and create students in both admissions and students apps
         student_map = {}
+        students_student_map = {}
         with open(os.path.join(base_path, 'students.csv'), newline='', encoding='utf-8') as f:
-            # Create matching StudentsStudent records for discipline seeder
-            students_student_map = {}
-            for idx, admissions_pk in student_map.items():
-                admissions_student = AdmissionsStudent.objects.get(pk=admissions_pk)
-                students_student, _ = StudentsStudent.objects.update_or_create(
-                    first_name=admissions_student.first_name,
-                    last_name=admissions_student.last_name,
-                    grade=admissions_student.grade,
-                    birth_date=admissions_student.birth_date,
-                    defaults={}
-                )
-                students_student_map[idx] = students_student.pk
             reader = csv.DictReader(f)
             for idx, row in enumerate(reader, start=1):
                 try:
@@ -56,7 +45,8 @@ class Command(BaseCommand):
                             grade_val = int(grade_val)
                         except Exception:
                             grade_val = 0
-                    student, _ = AdmissionsStudent.objects.update_or_create(
+                    # Create in admissions
+                    admissions_student, _ = AdmissionsStudent.objects.update_or_create(
                         family=demo_family,
                         first_name=row['first_name'],
                         last_name=row['last_name'],
@@ -64,7 +54,16 @@ class Command(BaseCommand):
                         birth_date=row.get('birth_date', '2010-01-01'),
                         defaults={}
                     )
-                    student_map[str(idx)] = student.pk
+                    student_map[str(idx)] = admissions_student.pk
+                    # Create in students app
+                    students_student, _ = StudentsStudent.objects.update_or_create(
+                        first_name=row['first_name'],
+                        last_name=row['last_name'],
+                        grade_level=row['grade_level'],
+                        date_of_birth=row.get('birth_date', '2010-01-01'),
+                        defaults={}
+                    )
+                    students_student_map[str(idx)] = students_student.pk
                 except Exception as e:
                     logger.error(f"Student row {idx} failed: {e}")
                     self.stdout.write(self.style.WARNING(f"Student row {idx} failed: {e}"))
@@ -135,4 +134,80 @@ class Command(BaseCommand):
                 except Exception as e:
                     logger.error(f"Discipline row failed: {e}")
                     self.stdout.write(self.style.WARNING(f"Discipline row failed: {e}"))
+        # --- SCHEDULE TEMPLATES AND PERIODS ---
+        try:
+            from backend.schedulemaster.models import ScheduleTemplate, ClassPeriod
+            import datetime
+            # Clear existing schedule data
+            ScheduleTemplate.objects.all().delete()
+            # Standard 45-min schedule
+            std_template = ScheduleTemplate.objects.create(
+                name="Standard Day",
+                structure="Standard",
+                description="Standard 7-period day, 45 minutes each."
+            )
+            for i, (day, periods) in enumerate([
+                ("Monday", [
+                    ("08:00", "08:45"), ("08:50", "09:35"), ("09:40", "10:25"), ("10:30", "11:15"), ("11:20", "12:05"), ("12:10", "12:55"), ("13:00", "13:45")
+                ]),
+                ("Tuesday", [
+                    ("08:00", "08:45"), ("08:50", "09:35"), ("09:40", "10:25"), ("10:30", "11:15"), ("11:20", "12:05"), ("12:10", "12:55"), ("13:00", "13:45")
+                ]),
+                ("Wednesday", [
+                    ("08:00", "08:45"), ("08:50", "09:35"), ("09:40", "10:25"), ("10:30", "11:15"), ("11:20", "12:05"), ("12:10", "12:55"), ("13:00", "13:45")
+                ]),
+                ("Thursday", [
+                    ("08:00", "08:45"), ("08:50", "09:35"), ("09:40", "10:25"), ("10:30", "11:15"), ("11:20", "12:05"), ("12:10", "12:55"), ("13:00", "13:45")
+                ]),
+                ("Friday", [
+                    ("08:00", "08:45"), ("08:50", "09:35"), ("09:40", "10:25"), ("10:30", "11:15"), ("11:20", "12:05"), ("12:10", "12:55"), ("13:00", "13:45")
+                ]),
+            ]):
+                for idx, (start, end) in enumerate(periods, 1):
+                    ClassPeriod.objects.create(
+                        template=std_template,
+                        day=day,
+                        start_time=datetime.time.fromisoformat(start),
+                        end_time=datetime.time.fromisoformat(end),
+                        subject=None
+                    )
+            # Block 90-min schedule
+            block_template = ScheduleTemplate.objects.create(
+                name="Block Schedule",
+                structure="Block",
+                description="Block schedule with 4 periods, 90 minutes each."
+            )
+            for day, periods in [
+                ("Monday", [("08:00", "09:30"), ("09:40", "11:10"), ("11:20", "12:50"), ("13:00", "14:30")]),
+                ("Wednesday", [("08:00", "09:30"), ("09:40", "11:10"), ("11:20", "12:50"), ("13:00", "14:30")]),
+                ("Friday", [("08:00", "09:30"), ("09:40", "11:10"), ("11:20", "12:50"), ("13:00", "14:30")]),
+            ]:
+                for idx, (start, end) in enumerate(periods, 1):
+                    ClassPeriod.objects.create(
+                        template=block_template,
+                        day=day,
+                        start_time=datetime.time.fromisoformat(start),
+                        end_time=datetime.time.fromisoformat(end),
+                        subject=None
+                    )
+            # Hybrid (Modified Block) schedule
+            hybrid_template = ScheduleTemplate.objects.create(
+                name="Hybrid Wednesday",
+                structure="Hybrid",
+                description="Modified block schedule for Wednesdays."
+            )
+            for day, periods in [
+                ("Wednesday", [("08:00", "09:00"), ("09:10", "10:10"), ("10:20", "11:20"), ("11:30", "12:30"), ("13:00", "14:00")]),
+            ]:
+                for idx, (start, end) in enumerate(periods, 1):
+                    ClassPeriod.objects.create(
+                        template=hybrid_template,
+                        day=day,
+                        start_time=datetime.time.fromisoformat(start),
+                        end_time=datetime.time.fromisoformat(end),
+                        subject=None
+                    )
+            self.stdout.write(self.style.SUCCESS('Schedule templates and periods seeded.'))
+        except Exception as e:
+            self.stdout.write(self.style.WARNING(f"Schedule seeding failed: {e}"))
         self.stdout.write(self.style.SUCCESS('Demo data seeded successfully.'))

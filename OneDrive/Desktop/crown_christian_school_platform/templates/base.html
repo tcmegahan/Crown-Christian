@@ -4,24 +4,94 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Crown Admin</title>
-  <!-- CROWN CLASSIC THEME: YANKEE HERITAGE -->
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="/static/css/crown_classic.css">
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Playfair+Display:700,900&display=swap" rel="stylesheet">
 </head>
 <body>
 
-  <header>
-    <div class="logo">
-      <div class="logo-img">CCS</div>
-      <h1>Crown Admin Dashboard</h1>
+  <!-- Sidebar Navigation -->
+  <div class="sidebar d-none d-lg-block" role="navigation" aria-label="Main sidebar navigation">
+    <div class="sidebar-header">
+      <a href="/" class="text-white text-decoration-none" aria-label="Crown Platform Home">
+        <span class="logo-img me-2">CCS</span> Crown Platform
+      </a>
     </div>
-    <a href="/admin/">Django Admin →</a>
-  </header>
-
-  <div class="runserver-command">
-    <p>To run the server, use the following command:</p>
-    <code>python manage.py runserver</code>
+    <nav class="nav flex-column" aria-label="Sidebar menu">
+      <a class="nav-link" href="/dashboards/admin_dashboard/" tabindex="0">Admin Dashboard</a>
+      <a class="nav-link" href="/dashboards/student_dashboard/" tabindex="0">Student Dashboard</a>
+      <a class="nav-link" href="/dashboards/parent_dashboard/" tabindex="0">Parent Dashboard</a>
+      <a class="nav-link" href="/dashboards/teacher_dashboard/" tabindex="0">Teacher Dashboard</a>
+      <a class="nav-link" href="/dashboards/staff_dashboard/" tabindex="0">Staff Dashboard</a>
+      <a class="nav-link" href="/admin/" tabindex="0">Django Admin</a>
+    </nav>
+    <div class="mt-5 px-3">
+      <div class="dropdown">
+        <a class="btn btn-outline-light w-100 dropdown-toggle" href="#" role="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true" aria-label="User menu">
+          <i class="bi bi-person-circle" aria-hidden="true"></i> User
+        </a>
+        <ul class="dropdown-menu" aria-labelledby="userDropdown" role="menu">
+          <li><a class="dropdown-item" href="/accounts/profile/" role="menuitem" tabindex="0">Profile</a></li>
+          <li><a class="dropdown-item" href="/accounts/settings/" role="menuitem" tabindex="0">Settings</a></li>
+          <li><hr class="dropdown-divider"></li>
+          <li><a class="dropdown-item" href="/accounts/logout/" role="menuitem" tabindex="0">Logout</a></li>
+        </ul>
+      </div>
+    </div>
   </div>
+
+  <!-- Top Navbar for mobile and quick links -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4 d-lg-none">
+    <div class="container-fluid">
+      <a class="navbar-brand d-flex align-items-center" href="/">
+        <span class="logo-img me-2">CCS</span>
+        <span>Crown Platform</span>
+      </a>
+      <button class="navbar-toggler" type="button" id="sidebarToggle" aria-label="Toggle sidebar">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="/admin/">Django Admin</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+
+  <main class="container mb-5" id="main-content">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="footer mt-auto py-3 bg-light border-top">
+    <div class="container text-center">
+      <span class="text-muted">&copy; {{ year|default:2025 }} Crown Christian School Platform</span>
+    </div>
+  </footer>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+  <!-- Sidebar Toggle Script -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const sidebar = document.querySelector('.sidebar');
+      const main = document.getElementById('main-content');
+      if (sidebar && main) {
+        document.body.classList.add('with-sidebar');
+      }
+      const sidebarToggle = document.getElementById('sidebarToggle');
+      if (sidebarToggle && sidebar) {
+        sidebarToggle.addEventListener('click', function() {
+          sidebar.classList.toggle('show');
+          document.body.classList.toggle('with-sidebar');
+        });
+      }
+    });
+  </script>
 </body>
 </html>

@@ -1,9 +1,14 @@
 from django.contrib import admin
 from django.urls import path, include
-from dashboards.views import home as dashboard_home
+
+
+from dashboards.views import admin_dashboard
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", dashboard_home, name="home"),
+    path("", admin_dashboard, name="home"),
     path("api/", include("api.urls")),
+    path("dashboards/", include("dashboards.urls")),
+    path("students/", include("students.urls")),
+    path("schedulemaster/", include("backend.schedulemaster.urls")),
 ]
