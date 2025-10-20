@@ -1,4 +1,6 @@
 from django.test import TestCase
+
+# Add your students app tests herefrom django.test import TestCase
 from students.models import Guardian, Student
 
 class GuardianModelTest(TestCase):

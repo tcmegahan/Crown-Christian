@@ -1,0 +1,1 @@
+# schedulemaster migrations

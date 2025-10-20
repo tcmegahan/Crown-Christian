@@ -1,10 +1,14 @@
-git config --global user.name "Your Name"
-git config --global user.email "your@email.com"__pycache__/
+__pycache__/
+
+__pycache__/
 *.pyc
 *.pyo
-*.pyd
 .Python
-env/
+backups/
+.vscode/
+*.log
+*.zip
+data/demo/
 venv/
 .venv/
 build/
@@ -35,21 +39,26 @@ __pycache__/
 *.db
 *.log
 *.pot
-*.pyc
-*.pyo
-*.pyd
 .env
 .venv
 venv/
 ENV/
 env/
 
+
 # Django static and media
 static/
 media/
 
+
 # VS Code
 .vscode/
+
+
+# Prevent extensions and system files from being tracked
+.vscode/extensions/
+AppData/
+
 
 # Jupyter Notebooks
 .ipynb_checkpoints/

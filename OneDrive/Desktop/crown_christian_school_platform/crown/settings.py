@@ -23,8 +23,9 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
-    # local apps
-    'common', 'students', 'staff', 'finance', 'admissions', 'financial_aid', 'ptf', 'discipline', 'curriculum', 'communications', 'events', 'chapel', 'devotions', 'donations', 'dashboards', 'api'
+    # backend apps only (no duplicates, only present apps)
+    'backend.core','backend.crm','backend.admissions','backend.sis','backend.finance','backend.communications',
+    'backend.calendarx','backend.admin_dashboard','backend.analytics','backend.mission','backend.scheduling','backend.academics','backend.library','backend.tutoring','backend.athletics','backend.clubs','backend.field_trips','backend.transport','backend.maintenance','backend.store','backend.lunch','backend.events','backend.fundraising','backend.daycare','backend.surveys','backend.board','backend.ptf','backend.adult_learning','backend.summer_camp','backend.integrations','backend.schedulemaster','backend.chapel','backend.activities','backend.adultlearning','backend.financial_aid','backend.donations','backend.discipline','students','dashboards'
 ]
 
 MIDDLEWARE = [
@@ -57,10 +58,7 @@ TEMPLATES = [
 WSGI_APPLICATION = "crown.wsgi.application"
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
+    "default": env.db(),
 }
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -74,6 +72,37 @@ LANGUAGE_CODE = "en-us"
 USE_I18N = True
 USE_TZ = True
 
-STATIC_URL = "static/"
+
+STATIC_URL = "/static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# --- Crown Full Bundle recommended settings ---
+TIME_ZONE = "America/New_York"
+USE_TZ = True
+
+# Microsoft Graph
+MS_GRAPH_TENANT_ID = os.getenv("MS_GRAPH_TENANT_ID", "YOUR_TENANT_ID")
+MS_GRAPH_CLIENT_ID = os.getenv("MS_GRAPH_CLIENT_ID", "YOUR_CLIENT_ID")
+MS_GRAPH_CLIENT_SECRET = os.getenv("MS_GRAPH_CLIENT_SECRET", "YOUR_CLIENT_SECRET")
+
+# Branding & Assets
+SCHOOL_LOGO_PATH = BASE_DIR / "static" / "images" / "crown_logo.png"
+BULLETIN_QR_URL = "https://www.crownchristianschools.com/devotions"
+DEFAULT_CHAPEL_BANNER = BASE_DIR / "static" / "images" / "chapel_default.jpg"
+DEFAULT_DEVOTION_BANNER = BASE_DIR / "static" / "images" / "devotion_default.jpg"
+
+# Social (use environment variables in production)
+SOCIAL_FACEBOOK_PAGE_ID = os.getenv("SOCIAL_FACEBOOK_PAGE_ID", "")
+SOCIAL_FACEBOOK_PAGE_ACCESS_TOKEN = os.getenv("SOCIAL_FACEBOOK_PAGE_ACCESS_TOKEN", "")
+SOCIAL_INSTAGRAM_BUSINESS_ID = os.getenv("SOCIAL_INSTAGRAM_BUSINESS_ID", "")
+SOCIAL_INSTAGRAM_ACCESS_TOKEN = os.getenv("SOCIAL_INSTAGRAM_ACCESS_TOKEN", "")
+SOCIAL_DEFAULT_HASHTAGS = "#CrownChristian #Faith #Chapel #Devotion #ChristianEducation"
+
+
+
+

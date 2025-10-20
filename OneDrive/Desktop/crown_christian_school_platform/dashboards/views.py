@@ -1,16 +1,17 @@
 from django.shortcuts import render
 from students.models import Student
-from finance.models import FinanceRecord
-from financial_aid.models import AidApplication
-from donations.models import Donation
-from discipline.models import DisciplineIncident
+from backend.finance.models import FinancialAid, TuitionPayment, BudgetLine
+FinanceRecord = None  # Remove reference, use backend.finance models
+from backend.financial_aid.models import AidApplication
+from backend.donations.models import Donation
+from backend.discipline.models import DisciplineIncident
 from django.db.models import Sum
 
 def home(request):
     totals = {
         "students": Student.objects.count(),
-        "tuition": FinanceRecord.objects.filter(category="TUITION").aggregate(s=Sum("amount"))["s"] or 0,
-        "aid": AidApplication.objects.aggregate(s=Sum("awarded_amount"))["s"] or 0,
+        "tuition": TuitionPayment.objects.aggregate(s=Sum("amount_paid"))["s"] or 0,
+        "aid": FinancialAid.objects.aggregate(s=Sum("amount_awarded"))["s"] or 0,
         "donations": Donation.objects.aggregate(s=Sum("amount"))["s"] or 0,
     }
     recent_incidents = DisciplineIncident.objects.order_by("-date")[:10]

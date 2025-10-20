@@ -1,0 +1,6 @@
+pytest
+pytest-django
+pytest-cov
+flake8
+black
+isort

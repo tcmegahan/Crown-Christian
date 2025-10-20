@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Admin Dashboard</h2>
+<div class="cards">
+  <div class="card"><h3>System Overview</h3><div class="muted">All modules, users, and data at a glance.</div></div>
+  <div class="card"><h3>Recent Activity</h3><div class="muted">System logs, user sign-ins, and changes.</div></div>
+  <div class="card"><h3>Quick Links</h3><ul><li><a href="/admin/">Django Admin</a></li><li><a href="/students/">Students</a></li><li><a href="/staff/">Staff</a></li><li><a href="/events/">Events</a></li></ul></div>
+</div>
+{% endblock %}
