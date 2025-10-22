@@ -19,16 +19,15 @@ RUN apt-get update \
 # Copy source
 COPY . ./
 
-# Collect static files (do not fail build if settings not configured)
-RUN mkdir -p /app/staticfiles \
- && python manage.py collectstatic --noinput || true
-
 # Create non-root user and set ownership
 RUN addgroup --system appgroup || true \
  && adduser --system --ingroup appgroup --no-create-home appuser || true \
  && chown -R appuser:appgroup /app
 
+# Collect static files (do not fail build if settings not configured)
 USER appuser
+RUN mkdir -p /app/staticfiles \
+ && python manage.py collectstatic --noinput || true
 
 EXPOSE 8000
 
