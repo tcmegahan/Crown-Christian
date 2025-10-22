@@ -6,6 +6,8 @@ ENV PYTHONUNBUFFERED=1
 WORKDIR /app
 
 COPY requirements.txt ./
+
+# Install system deps, upgrade pip and install Python requirements
 RUN apt-get update \
  && apt-get install -y --no-install-recommends gcc libpq-dev build-essential curl \
  && python -m pip install --upgrade pip \
@@ -14,18 +16,22 @@ RUN apt-get update \
  && apt-get autoremove -y \
  && rm -rf /var/lib/apt/lists/*
 
+# Copy source
 COPY . ./
 
 # Collect static files (do not fail build if settings not configured)
 RUN mkdir -p /app/staticfiles \
  && python manage.py collectstatic --noinput || true
 
-# Create non-root user (do not fail if not available in minimal images)
+# Create non-root user and set ownership
 RUN addgroup --system appgroup || true \
- && adduser --system --ingroup appgroup --no-create-home appuser || true
+ && adduser --system --ingroup appgroup --no-create-home appuser || true \
+ && chown -R appuser:appgroup /app
+
 USER appuser
 
 EXPOSE 8000
+
 HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
  CMD curl -f http://localhost:8000/ || exit 1
 
