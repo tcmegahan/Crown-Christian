@@ -1,0 +1,19 @@
+{
+ "name": "crown2-dev",
+ "image": "mcr.microsoft.com/devcontainers/python:3.12",
+ "features": { "ghcr.io/devcontainers/features/node:1": { "version": "20" } },
+ "postCreateCommand": "pip install -U pip && pip install -r apps/api/requirements-dev.txt || true && corepack enable && corepack prepare pnpm@9.0.0 --activate && pnpm i --prefix apps/web || true",
+ "customizations": {
+ "vscode": {
+ "extensions": [
+ "ms-python.python",
+ "ms-azuretools.vscode-azureappservice",
+ "ms-vscode.vscode-node-azure-pack",
+ "ms-Teams-vscode-extension.vscode-teams-toolkit",
+ "ms-python.vscode-pylance",
+ "esbenp.prettier-vscode",
+ "dbaeumer.vscode-eslint"
+ ]
+ }
+ }
+}

@@ -14,8 +14,28 @@ permissions:
 
 jobs:
  build:
+ name: Build Web
  runs-on: ubuntu-latest
  steps:
- - uses: actions/checkout@v4
- - name: Echo
- run: echo "Web CI placeholder"
+ - name: Checkout
+ uses: actions/checkout@v4
+
+ - name: Setup Node
+ uses: actions/setup-node@v4
+ with:
+ node-version: '20'
+
+ - name: Install pnpm
+ run: npm i -g pnpm
+
+ - name: Install deps
+ run: pnpm i --prefix apps/web
+
+ - name: Build
+ run: pnpm --prefix apps/web build
+
+ - name: Upload artifact
+ uses: actions/upload-artifact@v4
+ with:
+ name: web-build
+ path: apps/web/dist

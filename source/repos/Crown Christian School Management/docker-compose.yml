@@ -1,0 +1,97 @@
+version: '3.8'
+
+networks:
+  crown2-net:
+    driver: bridge
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: crown2
+      POSTGRES_USER: crown2
+      POSTGRES_PASSWORD: crown2
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U crown2"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - crown2-net
+
+  redis:
+    image: redis:7
+    ports:
+      - "6379:6379"
+    networks:
+      - crown2-net
+
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+    networks:
+      - crown2-net
+
+  api:
+    build:
+      context: .
+      dockerfile: ./apps/api/Dockerfile
+    command: sh -c 'gunicorn api.wsgi:application --bind 0.0.0.0:8000 --workers 2'
+    volumes:
+      - ./apps/api:/app
+      - static_volume:/app/static
+    env_file:
+      - .env
+    environment:
+      - DATABASE_URL=postgres://crown2:crown2pass@postgres:5432/crown2
+      - DJANGO_DEBUG=1
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+      - redis
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8000/api/schema/ || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+    networks:
+      - crown2-net
+
+  web:
+    build:
+      context: ./apps/web
+      dockerfile: Dockerfile
+    volumes:
+      - ./apps/web:/app
+    env_file:
+      - .env
+    ports:
+      - "5173:5173"
+    depends_on:
+      - api
+    networks:
+      - crown2-net
+
+  worker:
+    build:
+      context: .
+      dockerfile: ./apps/api/Dockerfile
+    command: sh -c 'celery -A api worker --loglevel=info'
+    env_file:
+      - .env
+    depends_on:
+      - redis
+      - postgres
+    networks:
+      - crown2-net
+
+volumes:
+  db_data:
+  static_volume:
