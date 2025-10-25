@@ -13,8 +13,6 @@ jobs:
  build:
  runs-on: ubuntu-latest
  steps:
- - name: Checkout
- uses: actions/checkout@v4
-
- - name: Run placeholder
- run: echo "Web CI - placeholder"
+ - uses: actions/checkout@v4
+ - name: Echo
+ run: echo "Web CI placeholder"
