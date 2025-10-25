@@ -15,4 +15,4 @@ jobs:
  steps:
  - uses: actions/checkout@v4
  - name: Echo
- run: echo "API CI placeholder"
+ run: echo "API CI noop"
