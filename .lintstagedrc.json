@@ -1,6 +1,6 @@
 {
  "apps/web/src/**/*.{ts,tsx}": [
- "pnpm --filter apps/web run lint -- --fix",
- "pnpm --filter apps/web run format"
+ "cd apps/web && pnpm run lint -- --fix",
+ "cd apps/web && pnpm run format"
  ]
 }

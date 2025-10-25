@@ -9,17 +9,25 @@
   "scripts": {
     "install:all": "pnpm install",
     "prepare": "husky install",
-    "typecheck": "pnpm -w -F apps/web exec tsc --noEmit",
-    "web:build": "pnpm -w -F apps/web run build",
-    "web:typecheck": "pnpm -F apps/web run typecheck",
-    "web:lint": "pnpm -F apps/web run lint",
+    "typecheck": "pnpm -w -F crown2-web exec tsc --noEmit",
+    "web:build": "pnpm -w -F crown2-web run build",
+    "web:typecheck": "pnpm -F crown2-web run typecheck",
+    "web:lint": "pnpm -F crown2-web run lint",
     "api:test": "cd apps/api && python -m pytest -q",
-    "ci": "pnpm -w -s -r run -r typecheck"
+    "ci": "pnpm -w -s -r run -r typecheck",
+    "lint-all": "pnpm -w -s -r run lint",
+    "format-all": "pnpm -w -s -r run format"
   },
   "devDependencies": {
     "husky": "^8.0.0",
     "lint-staged": "^14.0.0",
     "prettier": "^2.0.0",
-    "eslint": "^8.0.0"
+    "eslint": "^8.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "eslint-plugin-react": "^7.0.0",
+    "eslint-plugin-react-hooks": "^4.0.0",
+    "eslint-plugin-jsx-a11y": "^6.0.0",
+    "eslint-config-prettier": "^8.0.0"
   }
 }
