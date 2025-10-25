@@ -9,19 +9,17 @@ on:
  branches:
  - main
 
-permissions:
- contents: read
- packages: write
- id-token: write
-
 jobs:
  build:
  runs-on: ubuntu-latest
  steps:
- - uses: actions/checkout@v4
- - name: Set up Python
+ - name: Checkout
+ uses: actions/checkout@v4
+
+ - name: Setup Python
  uses: actions/setup-python@v4
  with:
  python-version: '3.12'
- - name: Echo
- run: echo "API CI placeholder"
+
+ - name: Run placeholder
+ run: echo "API CI - placeholder"

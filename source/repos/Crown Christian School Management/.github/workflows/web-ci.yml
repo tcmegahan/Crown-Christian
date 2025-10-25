@@ -3,17 +3,18 @@ name: Web CI
 
 on:
  push:
- branches: [main]
+ branches:
+ - main
  pull_request:
- branches: [main]
-
-permissions:
- contents: read
+ branches:
+ - main
 
 jobs:
  build:
  runs-on: ubuntu-latest
  steps:
- - uses: actions/checkout@v4
- - name: Echo
- run: echo "Web CI placeholder"
+ - name: Checkout
+ uses: actions/checkout@v4
+
+ - name: Run placeholder
+ run: echo "Web CI - placeholder"
