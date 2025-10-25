@@ -1,0 +1,13 @@
+# Production requirements - pin versions when ready
+Django>=4.2
+djangorestframework
+psycopg[binary]
+drf-spectacular
+django-environ
+msal
+requests
+azure-identity
+azure-storage-blob
+azure-keyvault-secrets
+django-cors-headers
+gunicorn
