@@ -1,0 +1,25 @@
+{
+  "private": true,
+  "name": "crown-root",
+  "version": "0.0.0",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "install:all": "pnpm install",
+    "prepare": "husky install",
+    "typecheck": "pnpm -w -F apps/web exec tsc --noEmit",
+    "web:build": "pnpm -w -F apps/web run build",
+    "web:typecheck": "pnpm -F apps/web run typecheck",
+    "web:lint": "pnpm -F apps/web run lint",
+    "api:test": "cd apps/api && python -m pytest -q",
+    "ci": "pnpm -w -s -r run -r typecheck"
+  },
+  "devDependencies": {
+    "husky": "^8.0.0",
+    "lint-staged": "^14.0.0",
+    "prettier": "^2.0.0",
+    "eslint": "^8.0.0"
+  }
+}
