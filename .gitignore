@@ -1,0 +1,67 @@
+# OS / editor
+Thumbs.db
+Desktop.ini
+.DS_Store
+*.swp
+*.swo
+.vscode/
+.vscode-insiders/
+.vs/
+.idea/
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.env
+.env
+.env.*
+*.sqlite3
+db.sqlite3
+
+# Node
+node_modules/
+**/node_modules/
+apps/web/dist/
+apps/web/.turbo/
+pnpm-lock.yaml
+
+# build
+dist/
+build/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# System / user profile paths (Windows)
+AppData/
+AppData/Local/Temp/
+AppData/Local/Temporary Internet Files/
+
+# tool caches
+.cache/
+.aitk/
+.azure/
+.nuget/
+
+# IDE extensions / local
+*.code-workspace
+
+# Python/Node caches
+
+# Ignore compiled binaries, caches
+*.exe
+*.dll
+*.so
+
+# ignore local scripts output
+scripts/*.log
+
+# Allowlist common project files
+!apps/web/package.json
+!apps/api/requirements-dev.txt

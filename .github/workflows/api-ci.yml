@@ -1,0 +1,58 @@
+---
+name: API CI
+
+on:
+ pull_request:
+ branches: [ main ]
+ push:
+ branches: [ main ]
+
+jobs:
+ build:
+ runs-on: ubuntu-latest
+ services:
+ postgres:
+ image: postgres:14
+ env:
+ POSTGRES_USER: postgres
+ POSTGRES_PASSWORD: postgres
+ POSTGRES_DB: postgres
+ ports:
+ -5432:5432
+ options: >-
+ --health-cmd pg_isready
+ --health-interval10s
+ --health-timeout5s
+ --health-retries5
+ steps:
+ - uses: actions/checkout@v4
+ - name: Setup Python
+ uses: actions/setup-python@v4
+ with:
+ python-version: '3.10'
+ - name: Cache pip
+ uses: actions/cache@v4
+ with:
+ path: ~/.cache/pip
+ key: ${{ runner.os }}-pip-${{ hashFiles('**/apps/api/requirements-dev.txt') }}
+ - name: Install dependencies
+ run: |
+ python -m pip install --upgrade pip
+ pip install -r apps/api/requirements-dev.txt
+ - name: Run migrations
+ run: |
+ cd apps/api
+ python manage.py migrate --noinput
+ - name: Run tests
+ env:
+ DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
+ run: |
+ python -m pytest -q
+ - name: Lint (ruff)
+ run: |
+ pip install ruff
+ ruff check apps/api
+ - name: Format check (black)
+ run: |
+ pip install black
+ black --check .
