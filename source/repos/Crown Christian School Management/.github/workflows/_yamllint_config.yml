@@ -1,0 +1,6 @@
+extends: default
+rules:
+ new-lines: {allow-multiple: false}
+ line-length: {max:160}
+ truthy: {allowed-values: [true, false]}
+ brackets: {allow-spaces-inside: false}
