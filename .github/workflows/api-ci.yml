@@ -48,11 +48,12 @@ jobs:
  DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
  run: |
  python -m pytest -q
+ - name: Install dev tools
+ run: |
+ pip install ruff black
  - name: Lint (ruff)
  run: |
- pip install ruff
  ruff check apps/api
  - name: Format check (black)
  run: |
- pip install black
  black --check .
