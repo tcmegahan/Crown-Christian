@@ -2,7 +2,7 @@
 name: Deploy API to Azure
 
 on:
- workflow_dispatch:
+ workflow_dispatch: {}
 
 jobs:
  deploy:
