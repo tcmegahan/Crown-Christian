@@ -17,17 +17,17 @@ from .models import (
 class FamilySerializer(serializers.ModelSerializer):
  class Meta:
   model = Family
-  fields = '__all__'
+  fields = ('household_id', 'name', 'address', 'phone')
 
 class GuardianSerializer(serializers.ModelSerializer):
  class Meta:
   model = Guardian
-  fields = '__all__'
+  fields = ('guardian_id', 'family', 'first_name', 'last_name', 'email', 'phone')
 
 class StudentSerializer(serializers.ModelSerializer):
  class Meta:
   model = Student
-  fields = '__all__'
+  fields = ('student_id', 'family', 'first_name', 'last_name', 'dob', 'grade_level', 'status')
 
 class TermSerializer(serializers.ModelSerializer):
  class Meta:
@@ -72,4 +72,4 @@ class LedgerLineSerializer(serializers.ModelSerializer):
 class CommunicationSerializer(serializers.ModelSerializer):
  class Meta:
   model = Communication
-  fields = '__all__'
+  fields = ('comm_id', 'audience', 'channel', 'template', 'sent_on', 'meta')

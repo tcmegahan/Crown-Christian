@@ -1,4 +1,4 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, views, response, permissions
 from .models import (
  Family,
  Guardian,
@@ -75,3 +75,27 @@ class LedgerLineViewSet(viewsets.ModelViewSet):
 class CommunicationViewSet(viewsets.ModelViewSet):
  queryset = Communication.objects.all()
  serializer_class = CommunicationSerializer
+
+class ProfileView(views.APIView):
+ """Return minimal profile info: username, roles, and permission codes."""
+ permission_classes = [permissions.AllowAny]
+
+ def get(self, request):
+ user = request.user if request.user and request.user.is_authenticated else None
+ if not user:
+ return response.Response({"authenticated": False, "roles": [], "permissions": []})
+
+ profile = getattr(user, 'profile', None)
+ roles = []
+ perms = set()
+ if profile:
+ for role in profile.roles.all():
+ roles.append(role.name)
+ for p in role.permissions.all():
+ perms.add(p.code)
+ return response.Response({
+ "authenticated": True,
+ "username": user.username,
+ "roles": roles,
+ "permissions": sorted(list(perms)),
+ })
