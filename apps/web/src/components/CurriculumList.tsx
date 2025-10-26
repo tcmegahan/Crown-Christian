@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { getCurriculums, Curriculum } from '../lib/api';
+import { getCurriculums, Curriculum, createCurriculumAPI } from '../lib/api';
 import { getProfile } from '../lib/auth';
 
 export default function CurriculumList() {
@@ -11,6 +11,8 @@ export default function CurriculumList() {
     roles: [],
     permissions: [],
   });
+  const [creating, setCreating] = useState(false);
+  const [newName, setNewName] = useState('');
 
   useEffect(() => {
     getProfile()
@@ -31,17 +33,16 @@ export default function CurriculumList() {
     profile.authenticated && profile.permissions && profile.permissions.includes('edit_curriculum');
 
   async function createCurriculum() {
-    const name = prompt('Name for new curriculum');
-    if (!name) return;
-    const res = await fetch('/api/academics/curriculums/', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name }),
-    });
-    if (res.ok) {
-      const data = await res.json();
+    if (!newName) return;
+    setCreating(true);
+    try {
+      const data = await createCurriculumAPI(newName);
       setItems([data, ...items]);
+      setNewName('');
+    } catch (e) {
+      alert(String(e));
     }
+    setCreating(false);
   }
 
   if (loading) return <div>Loading curriculums...</div>;
@@ -49,7 +50,18 @@ export default function CurriculumList() {
   return (
     <div>
       <h3>Curriculums</h3>
-      {canEdit && <button onClick={createCurriculum}>New Curriculum</button>}
+      {canEdit && (
+        <div>
+          <input
+            value={newName}
+            onChange={(e) => setNewName(e.target.value)}
+            placeholder="New curriculum name"
+          />
+          <button onClick={createCurriculum} disabled={creating || !newName}>
+            Create
+          </button>
+        </div>
+      )}
       <ul>
         {items.map((c) => (
           <li key={c.curriculum_id}>
