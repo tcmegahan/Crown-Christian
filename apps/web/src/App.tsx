@@ -1,9 +1,10 @@
-import React from 'react'
+import React from 'react';
+import Dashboard from './components/Dashboard';
 
-export default function App(){
- return (
- <div>
- <h1>Crown2 Web</h1>
- </div>
- )
+export default function App() {
+  return (
+    <div>
+      <Dashboard />
+    </div>
+  );
 }

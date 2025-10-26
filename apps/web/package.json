@@ -7,7 +7,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
-    "lint": "eslint \"src/**/*.{ts,tsx}\"",
+    "lint": "eslint",
     "format": "prettier --write \"src/**/*.{ts,tsx,css,md,json}\""
   },
   "dependencies": {

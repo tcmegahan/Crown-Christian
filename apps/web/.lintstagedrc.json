@@ -1,6 +1,6 @@
 {
  "src/**/*.{ts,tsx}": [
- "pnpm run lint -- --fix",
- "pnpm run format"
+ "pnpm --filter crown2-web exec eslint --fix",
+ "pnpm --filter crown2-web exec prettier --write"
  ]
 }
