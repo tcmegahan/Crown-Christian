@@ -1,23 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { getCurriculums, Curriculum, createCurriculumAPI } from '../lib/api';
-import { getProfile } from '../lib/auth';
+import { useProfile } from '../lib/ProfileContext';
 
 export default function CurriculumList() {
   const [items, setItems] = useState<Curriculum[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [profile, setProfile] = useState<any>({
-    authenticated: false,
-    roles: [],
-    permissions: [],
-  });
+  const { profile } = useProfile();
   const [creating, setCreating] = useState(false);
   const [newName, setNewName] = useState('');
 
   useEffect(() => {
-    getProfile()
-      .then((p) => setProfile(p))
-      .catch(() => {});
     getCurriculums()
       .then((data) => {
         setItems(data);
