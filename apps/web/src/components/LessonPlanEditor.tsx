@@ -7,6 +7,7 @@ import {
   updateLessonPlan,
   Curriculum,
 } from '../lib/api';
+import { useProfile } from '../lib/ProfileContext';
 
 export default function LessonPlanEditor({
   id,
@@ -15,6 +16,9 @@ export default function LessonPlanEditor({
   id?: string;
   onSaved?: (lp: any) => void;
 }) {
+  const { profile } = useProfile();
+  const canEdit =
+    profile.authenticated && profile.permissions && profile.permissions.includes('edit_curriculum');
   const [curriculums, setCurriculums] = useState<Curriculum[]>([]);
   const [title, setTitle] = useState('');
   const [curriculumId, setCurriculumId] = useState<string | undefined>(undefined);
@@ -45,6 +49,10 @@ export default function LessonPlanEditor({
   }, [id]);
 
   async function save() {
+    if (!canEdit) {
+      alert('You do not have permission to perform this action.');
+      return;
+    }
     setSaving(true);
     try {
       if (id) {
@@ -65,6 +73,8 @@ export default function LessonPlanEditor({
     }
     setSaving(false);
   }
+
+  if (!canEdit) return <div>You do not have permission to create or edit lesson plans.</div>;
 
   if (loading) return <div>Loading...</div>;
   return (

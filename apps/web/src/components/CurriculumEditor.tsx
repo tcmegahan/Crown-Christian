@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react';
 import { getCurriculumById, updateCurriculum, createCurriculumAPI } from '../lib/api';
+import { useProfile } from '../lib/ProfileContext';
 
 export default function CurriculumEditor({
   id,
@@ -9,6 +10,9 @@ export default function CurriculumEditor({
   id?: string;
   onSaved?: (c: any) => void;
 }) {
+  const { profile } = useProfile();
+  const canEdit =
+    profile.authenticated && profile.permissions && profile.permissions.includes('edit_curriculum');
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [loading, setLoading] = useState(false);
@@ -26,6 +30,10 @@ export default function CurriculumEditor({
   }, [id]);
 
   async function save() {
+    if (!canEdit) {
+      alert('You do not have permission to perform this action.');
+      return;
+    }
     setLoading(true);
     try {
       if (id) {
@@ -40,6 +48,8 @@ export default function CurriculumEditor({
     }
     setLoading(false);
   }
+
+  if (!canEdit) return <div>You do not have permission to create or edit curriculums.</div>;
 
   return (
     <div>
